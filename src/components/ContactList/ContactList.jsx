@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteContact } from '../../redux/contactsSlice';
 
 export const ContactList = () => {
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(state => state.contacts.items);
   const filter = useSelector(state => state.filter);
   const dispatch = useDispatch();
 
@@ -22,10 +22,10 @@ export const ContactList = () => {
 
   return (
     <ContactsList>
-      {visibleContacts.map(({ id, name, number }) => (
+      {visibleContacts.map(({ id, name, phone }) => (
         <ContactsListItem key={id}>
           <p>{name}:</p>
-          <p>{number}</p>
+          <p>{phone}</p>
           <ContactBtn type="button" onClick={() => dispatch(deleteContact(id))}>
             Delete
           </ContactBtn>

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { nanoid } from 'nanoid';
+import { fetchContacts } from './operations';
+// import { nanoid } from 'nanoid';
 
 const tasksInitialState = [
   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -10,38 +11,56 @@ const tasksInitialState = [
 
 const tasksSlice = createSlice({
   name: 'contacts',
-  initialState: tasksInitialState,
-  reducers: {
-    addContact: {
-      reducer(state, action) {
-        let { name } = action.payload;
+  initialState: {
+    items: [],
+    isLoading: false,
+    error: null,
+  },
+  // reducers: {
+  //   addContact: {
+  //     reducer(state, action) {
+  //       let { name } = action.payload;
 
-        const check = state.filter(
-          contact => contact.name.toLowerCase() === name.toLowerCase()
-        );
+  //       const check = state.filter(
+  //         contact => contact.name.toLowerCase() === name.toLowerCase()
+  //       );
 
-        if (check.length) {
-          alert(`${name} is already in contacts`);
-        } else {
-          state.push(action.payload);
-        }
-      },
-      prepare(data) {
-        return {
-          payload: {
-            ...data,
-            id: nanoid(),
-          },
-        };
-      },
+  //       if (check.length) {
+  //         alert(`${name} is already in contacts`);
+  //       } else {
+  //         state.push(action.payload);
+  //       }
+  //     },
+  //     prepare(data) {
+  //       return {
+  //         payload: {
+  //           ...data,
+  //           id: nanoid(),
+  //         },
+  //       };
+  //     },
+  //   },
+  //   deleteContact(state, action) {
+  //     return state.filter(({ id }) => id !== action.payload); //return бо ми не мотуємо стан
+  //     // const index = state.findIndex(task => task.id === action.payload);
+  //     // state.splice(index, 1); // при мутації return непотрібний
+  //   },
+  extraReducers: {
+    [fetchContacts.pending](state) {
+      state.isLoading = true;
     },
-    deleteContact(state, action) {
-      return state.filter(({ id }) => id !== action.payload); //return бо ми не мотуємо стан
-      // const index = state.findIndex(task => task.id === action.payload);
-      // state.splice(index, 1); // при мутації return непотрібний
+    [fetchContacts.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.items = action.payload;
+    },
+    [fetchContacts.rejected](state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     },
   },
 });
+// console.log(tasksSlice.reducer);
 
 export const { addContact, deleteContact } = tasksSlice.actions;
 export const tasksReducer = tasksSlice.reducer;
