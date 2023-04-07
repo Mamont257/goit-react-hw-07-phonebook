@@ -3,7 +3,7 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Form, FormField } from './ContactForm.styled';
 import { useDispatch } from 'react-redux';
-import { addContact } from '../../redux/contactsSlice';
+import { addContact } from 'redux/operations';
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
@@ -13,12 +13,12 @@ const ContactSchema = Yup.object().shape({
       excludeEmptyString: true,
     })
     .required('Required'),
-  number: Yup.string()
+  phone: Yup.string()
     .matches(
       /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
       {
         message:
-          'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +',
+          'Phone phone must be digits and can contain spaces, dashes, parentheses and can start with +',
         excludeEmptyString: true,
       }
     )
@@ -30,7 +30,7 @@ export const ContactForm = () => {
 
   return (
     <Formik
-      initialValues={{ name: '', number: '' }}
+      initialValues={{ name: '', phone: '' }}
       validationSchema={ContactSchema}
       onSubmit={(value, { resetForm }) => {
         dispatch(addContact(value));
@@ -50,8 +50,8 @@ export const ContactForm = () => {
         </FormField>
         <FormField>
           Number
-          <Field type="tel" name="number" />
-          <ErrorMessage name="number" component="div" />
+          <Field type="tel" name="phone" />
+          <ErrorMessage name="phone" component="div" />
         </FormField>
         <button type="submit">Add contact</button>
       </Form>
